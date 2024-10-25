@@ -1,3 +1,5 @@
+import { LEGACY_TO_UPDATED_TIMEZONES } from "../constants/timezones";
+
 export const formatTime = (time: Date, timezone: string) => {
   return time.toLocaleString("en-US", {
     timeZone: timezone,
@@ -20,9 +22,9 @@ export const formatDate = (time: Date, timezone: string) => {
 
 export const getSystemTimezone = (): string => {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return sanitizeTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   } catch {
-    return "Asia/Kolkata"; // Fallback to default
+    return "UTC"; // Fallback to default
   }
 };
 
@@ -59,4 +61,16 @@ export const formatTimezoneLabel = (
   } catch {
     return cityName || timezone;
   }
+};
+
+export const sanitizeTimeZone = (timeZone: string): string => {
+  let sanitizedTimeZone = timeZone;
+
+  // Check if the timeZone is in the LEGACY_TO_UPDATED_TIMEZONES mapping
+  // Loop until a valid and unique time zone is found
+  while (LEGACY_TO_UPDATED_TIMEZONES[sanitizedTimeZone]) {
+    sanitizedTimeZone = LEGACY_TO_UPDATED_TIMEZONES[sanitizedTimeZone];
+  }
+
+  return sanitizedTimeZone; // Return the final sanitized time zone
 };

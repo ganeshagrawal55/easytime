@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Globe, RotateCw } from 'lucide-react';
 import { TimeZoneCard } from './components/TimeZoneCard';
 import { DEFAULT_TIMEZONES } from './constants/timezones';
-import { getSystemTimezone, convertTimeToLocalDate, formatTimezoneLabel } from './utils/time';
+import { getSystemTimezone, convertTimeToLocalDate, formatTimezoneLabel, sanitizeTimeZone } from './utils/time';
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -14,9 +14,8 @@ function App() {
   const [sourceTimezone, setSourceTimezone] = useState(systemTimezone);
   const [targetTimezone, setTargetTimezone] = useState(DEFAULT_TIMEZONES.target.timezone);
 
-  const isLocalTimezone = sourceTimezone === systemTimezone;
-  const sourceLabel = formatTimezoneLabel(sourceTimezone, isLocalTimezone);
-  const targetLabel = formatTimezoneLabel(targetTimezone);
+  const sourceLabel = formatTimezoneLabel(sourceTimezone, sourceTimezone === systemTimezone);
+  const targetLabel = formatTimezoneLabel(targetTimezone, targetTimezone === systemTimezone);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,7 +24,7 @@ function App() {
     if (sourceTz) {
       try {
         new Date().toLocaleString('en-US', { timeZone: sourceTz });
-        setSourceTimezone(sourceTz);
+        setSourceTimezone(sanitizeTimeZone(sourceTz));
       } catch (e) {
         console.warn('Invalid source timezone in URL parameter', e);
       }
@@ -35,7 +34,7 @@ function App() {
     if (targetTz) {
       try {
         new Date().toLocaleString('en-US', { timeZone: targetTz });
-        setTargetTimezone(targetTz);
+        setTargetTimezone(sanitizeTimeZone(targetTz));
       } catch (e) {
         console.warn('Invalid target timezone in URL parameter', e);
       }
@@ -88,13 +87,13 @@ function App() {
   };
 
   const handleSourceTimezoneChange = (timezone: string) => {
-    setSourceTimezone(timezone);
-    updateURL(timezone, targetTimezone);
+    setSourceTimezone(sanitizeTimeZone(timezone));
+    updateURL(sanitizeTimeZone(timezone), targetTimezone);
   };
 
   const handleTargetTimezoneChange = (timezone: string) => {
-    setTargetTimezone(timezone);
-    updateURL(sourceTimezone, timezone);
+    setTargetTimezone(sanitizeTimeZone(timezone));
+    updateURL(sourceTimezone, sanitizeTimeZone(timezone));
   };
 
   const resetToCurrentTime = () => {
@@ -112,7 +111,7 @@ function App() {
             <div className="flex items-center justify-center gap-3 mb-8">
               <h1 className="text-4xl font-bold text-white text-center flex items-center gap-3">
                 <Globe className="w-10 h-10" />
-                EasyTime - Timezone Converter
+                EasyTime
               </h1>
               <button
                 onClick={resetToCurrentTime}
@@ -132,7 +131,7 @@ function App() {
                 onTimezoneChange={handleSourceTimezoneChange}
                 selectedTime={sourceTime}
                 isEditable={activeZone !== 'target'}
-                isLocal={isLocalTimezone}
+                isLocal={sourceTimezone === systemTimezone}
               />
 
               <TimeZoneCard
@@ -143,6 +142,7 @@ function App() {
                 onTimezoneChange={handleTargetTimezoneChange}
                 selectedTime={targetTime}
                 isEditable={activeZone !== 'source'}
+                isLocal={targetTimezone === systemTimezone}
               />
             </div>
           </div>
