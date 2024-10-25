@@ -10,8 +10,8 @@ interface TimezoneGroup {
 
 export const DEFAULT_TIMEZONES = {
   target: {
-    timezone: 'America/Los_Angeles',
-    label: 'Los Angeles (PST)',
+    timezone: 'Europe/Nicosia',
+    label: 'Nicosia, Cyprus',
   },
 };
 

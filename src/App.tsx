@@ -112,7 +112,7 @@ function App() {
             <div className="flex items-center justify-center gap-3 mb-8">
               <h1 className="text-4xl font-bold text-white text-center flex items-center gap-3">
                 <Globe className="w-10 h-10" />
-                Timezone Converter
+                EasyTime - Timezone Converter
               </h1>
               <button
                 onClick={resetToCurrentTime}
