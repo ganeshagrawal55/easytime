@@ -2,14 +2,15 @@
   "name": "easytime",
   "description": "EasyTime is a simple and intuitive tool that allows you to effortlessly convert time between different time zones. Whether you're scheduling meetings or coordinating across regions, EasyTime helps you avoid confusion by providing accurate time comparisons with just a few clicks.",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "surge ./dist https://easytime.ganeshagrawal.com --config ./surge.json"
+    "deploy": "surge ./dist https://easytime.ganeshagrawal.com --config ./surge.json",
+    "release": "standard-version && git push --follow-tags"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",
@@ -27,6 +28,7 @@
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
     "postcss": "^8.4.35",
+    "standard-version": "9.5.0",
     "surge": "0.24.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3",
