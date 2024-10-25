@@ -9,7 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "surge ./dist easytime.ganeshagrawal.com"
+    "deploy": "surge ./dist https://easytime.ganeshagrawal.com --config ./surge.json"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",

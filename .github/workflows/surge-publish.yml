@@ -1,0 +1,31 @@
+name: Deploy to Surge on Tag
+
+on:
+  push:
+    tags:
+      - "v*" # This will trigger the workflow for any tag that starts with 'v'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Publish to Surge
+        run: surge ./dist https://easytime.ganeshagrawal.com --token ${{ secrets.SURGE_TOKEN }} --config ./surge.json
